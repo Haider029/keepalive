@@ -11,8 +11,9 @@ jobs:
     steps:
       - name: Ping Arit menu route
         run: |  
-          response=$(curl -o /dev/null -s -w "%{http_code}" "https://arit.pk/menu/fryday-cafe")
+          response=$(curl -L -o /dev/null -s -w "%{http_code}" "https://arit.pk/menu/fryday-cafe")
           echo "Pinged https://arit.pk/menu/fryday-cafe - Status: $response"
-          if ["$response" -ge 400 ]; then
-            echo "::warning::ping failed with status $response"
+          if [ -z "$response" ] || [ "$response" -ge 400 ]; then
+            echo "::error::ping failed with status '$response'"
+            exit 1
             fi
